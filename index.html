@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Concepts Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+        .success {
+            color: green;
+            font-size: 0.9em;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        .dark-mode {
+            background-color: #222;
+            color: #fff;
+        }
+        .dark-mode section {
+            border-color: #444;
+        }
+        .dark-mode input, .dark-mode textarea {
+            background-color: #333;
+            color: #fff;
+            border-color: #555;
+        }
+        #counter-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle">Toggle Dark Mode</button>
+    
+    <h1>JavaScript Concepts Demo</h1>
+    
+    <section id="event-listeners">
+        <h2>Event Listeners</h2>
+        <p>Click the buttons below to see event listeners in action:</p>
+        
+        <button id="click-me">Click Me</button>
+        <button id="hover-me">Hover Over Me</button>
+        <button id="double-click-me">Double Click Me</button>
+        
+        <p id="event-output">Event messages will appear here.</p>
+    </section>
+    
+    <section id="form-validation">
+        <h2>Form Validation</h2>
+        <form id="demo-form">
+            <label for="name">Name (required, min 3 chars):</label>
+            <input type="text" id="name" required minlength="3">
+            <div id="name-error" class="error"></div>
+            
+            <label for="email">Email (must be valid):</label>
+            <input type="email" id="email" required>
+            <div id="email-error" class="error"></div>
+            
+            <label for="password">Password (min 6 chars):</label>
+            <input type="password" id="password" required minlength="6">
+            <div id="password-error" class="error"></div>
+            
+            <label for="message">Message (max 100 chars):</label>
+            <textarea id="message" maxlength="100"></textarea>
+            <div id="message-counter">Characters left: 100</div>
+            
+            <button type="submit">Submit Form</button>
+        </form>
+        <div id="form-success" class="success"></div>
+    </section>
+    
+    <section id="interactive-elements">
+        <h2>Interactive Elements</h2>
+        
+        <h3>Counter</h3>
+        <div id="counter-value">0</div>
+        <button id="increment">Increment</button>
+        <button id="decrement">Decrement</button>
+        <button id="reset">Reset</button>
+        
+        <h3>Color Picker</h3>
+        <input type="color" id="color-picker" value="#3498db">
+        <p>Selected color: <span id="color-value">#3498db</span></p>
+    </section>
+
+    <script>
+        // Event Listeners Section
+        document.getElementById('click-me').addEventListener('click', function() {
+            document.getElementById('event-output').textContent = 'Button was clicked!';
+        });
+        
+        document.getElementById('hover-me').addEventListener('mouseover', function() {
+            document.getElementById('event-output').textContent = 'Mouse is over the button!';
+        });
+        
+        document.getElementById('hover-me').addEventListener('mouseout', function() {
+            document.getElementById('event-output').textContent = 'Mouse left the button!';
+        });
+        
+        document.getElementById('double-click-me').addEventListener('dblclick', function() {
+            document.getElementById('event-output').textContent = 'Button was double-clicked!';
+        });
+        
+        // Form Validation Section
+        const form = document.getElementById('demo-form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const messageInput = document.getElementById('message');
+        const messageCounter = document.getElementById('message-counter');
+        
+        // Real-time message length counter
+        messageInput.addEventListener('input', function() {
+            const remaining = 100 - messageInput.value.length;
+            messageCounter.textContent = `Characters left: ${remaining}`;
+        });
+        
+        // Form submission handler
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            
+            // Name validation
+            if (nameInput.value.length < 3) {
+                document.getElementById('name-error').textContent = 'Name must be at least 3 characters';
+                isValid = false;
+            } else {
+                document.getElementById('name-error').textContent = '';
+            }
+            
+            // Email validation
+            if (!emailInput.checkValidity()) {
+                document.getElementById('email-error').textContent = 'Please enter a valid email address';
+                isValid = false;
+            } else {
+                document.getElementById('email-error').textContent = '';
+            }
+            
+            // Password validation
+            if (passwordInput.value.length < 6) {
+                document.getElementById('password-error').textContent = 'Password must be at least 6 characters';
+                isValid = false;
+            } else {
+                document.getElementById('password-error').textContent = '';
+            }
+            
+            // If form is valid, show success message
+            if (isValid) {
+                document.getElementById('form-success').textContent = 'Form submitted successfully!';
+                form.reset();
+                messageCounter.textContent = 'Characters left: 100';
+                
+                // Clear success message after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('form-success').textContent = '';
+                }, 3000);
+            }
+        });
+        
+        // Interactive Elements Section
+        let counter = 0;
+        const counterValue = document.getElementById('counter-value');
+        
+        document.getElementById('increment').addEventListener('click', function() {
+            counter++;
+            counterValue.textContent = counter;
+        });
+        
+        document.getElementById('decrement').addEventListener('click', function() {
+            counter--;
+            counterValue.textContent = counter;
+        });
+        
+        document.getElementById('reset').addEventListener('click', function() {
+            counter = 0;
+            counterValue.textContent = counter;
+        });
+        
+        // Color picker
+        const colorPicker = document.getElementById('color-picker');
+        const colorValue = document.getElementById('color-value');
+        
+        colorPicker.addEventListener('input', function() {
+            colorValue.textContent = colorPicker.value;
+            colorValue.style.color = colorPicker.value;
+        });
+        
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+</body>
+</html>
